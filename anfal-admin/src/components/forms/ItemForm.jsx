@@ -2,7 +2,7 @@ import { useForm, useFieldArray } from 'react-hook-form'
 import ImageUploader from '@/components/ui/ImageUploader'
 import { X, Plus, Trash2 } from 'lucide-react'
 
-const FOOD_TYPES = ['veg', 'non_veg', 'halal']
+const FOOD_TYPES = ['veg', 'non_veg']
 const BADGES     = ['', 'best_seller', 'chef_special', 'popular', 'new']
 
 export default function ItemForm({ initial, categories, onSave, onClose, saving }) {
@@ -82,7 +82,9 @@ export default function ItemForm({ initial, categories, onSave, onClose, saving 
                 className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2
                            text-sm text-white focus:outline-none focus:border-brand-accent/60">
                 {FOOD_TYPES.map((t) => (
-                  <option key={t} value={t}>{t.replace('_', ' ')}</option>
+                  <option key={t} value={t}>
+                    {t === 'veg' ? 'Vegetarian' : 'Non-Vegetarian'}
+                  </option>
                 ))}
               </select>
             </div>

@@ -8,7 +8,7 @@ import { Pencil, Trash2, Plus } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 const BADGE_LABELS = { best_seller: 'Best Seller', chef_special: 'Chef Special', popular: 'Popular', new: 'New' }
-const TYPE_COLORS  = { veg: 'text-green-400', non_veg: 'text-red-400', halal: 'text-emerald-400' }
+const TYPE_COLORS = { veg: 'text-green-400', non_veg: 'text-red-400' }
 
 export default function ItemsPage() {
   const qc                      = useQueryClient()
@@ -78,7 +78,7 @@ export default function ItemsPage() {
                     <p className="text-xs text-gray-500">{catMap[item.category_id] || '—'}</p>
                     {item.food_type && (
                       <span className={`text-xs ${TYPE_COLORS[item.food_type]}`}>
-                        {item.food_type.replace('_', ' ')}
+                        {item.food_type === 'veg' ? 'Vegetarian' : 'Non-Vegetarian'}
                       </span>
                     )}
                   </div>

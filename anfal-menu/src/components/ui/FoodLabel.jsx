@@ -1,7 +1,6 @@
 const TYPE_CONFIG = {
   veg:     { label: '●', classes: 'border-green-500 text-green-500',  title: 'Vegetarian' },
   non_veg: { label: '▲', classes: 'border-red-500 text-red-500',      title: 'Non-Vegetarian' },
-  halal:   { label: 'H', classes: 'border-emerald-400 text-emerald-400', title: 'Halal' },
 }
 
 export default function FoodLabel({ type }) {
