@@ -1,7 +1,5 @@
-import { useEffect }   from 'react'
-import { useForm }     from 'react-hook-form'
-import ImageUploader   from '@/components/ui/ImageUploader'
-import { X }           from 'lucide-react'
+import { useForm }   from 'react-hook-form'
+import ImageUploader from '@/components/ui/ImageUploader'
 
 export default function CategoryForm({ initial, onSave, onClose, saving }) {
   const { register, handleSubmit, setValue, watch } = useForm({
@@ -15,70 +13,127 @@ export default function CategoryForm({ initial, onSave, onClose, saving }) {
   const banner = watch('banner')
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 w-full max-w-md mx-4">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="text-base font-semibold text-white">
+    <>
+      {/* Backdrop */}
+      <div
+        onClick={onClose}
+        style={{
+          position: 'fixed', inset: 0,
+          backgroundColor: 'rgba(0,0,0,0.6)',
+          zIndex: 300,
+          backdropFilter: 'blur(2px)',
+        }}
+      />
+
+      {/* Form panel */}
+      <div
+        style={{
+          position: 'fixed',
+          zIndex: 301,
+          backgroundColor: '#111827',
+          border: '1px solid #1f2937',
+          overflowY: 'auto',
+        }}
+        className="admin-form-panel"
+      >
+        {/* Header */}
+        <div
+          style={{
+            display: 'flex', alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '16px 20px',
+            borderBottom: '1px solid #1f2937',
+            position: 'sticky', top: 0,
+            backgroundColor: '#111827',
+            zIndex: 1,
+          }}
+        >
+          <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#f9fafb' }}>
             {initial ? 'Edit Category' : 'New Category'}
           </h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-white">
-            <X size={16} />
+          <button
+            onClick={onClose}
+            style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', fontSize: '20px', lineHeight: 1 }}
+          >
+            ×
           </button>
         </div>
 
-        <form onSubmit={handleSubmit(onSave)} className="space-y-4">
-          <div>
-            <label className="block text-xs text-gray-400 mb-1.5">Name *</label>
+        {/* Form body */}
+        <form onSubmit={handleSubmit(onSave)} style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <Field label="Name *">
             <input
               {...register('name', { required: true })}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2
-                         text-sm text-white focus:outline-none focus:border-brand-accent/60"
               placeholder="e.g. Mandi"
+              style={inputStyle}
             />
-          </div>
+          </Field>
 
-          <div>
-            <label className="block text-xs text-gray-400 mb-1.5">Tagline</label>
+          <Field label="Tagline">
             <input
               {...register('description')}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2
-                         text-sm text-white focus:outline-none focus:border-brand-accent/60"
               placeholder="e.g. Traditional Arabian Rice Experience"
+              style={inputStyle}
             />
-          </div>
+          </Field>
 
-          <div>
-            <label className="block text-xs text-gray-400 mb-1.5">Sort Order</label>
+          <Field label="Sort Order">
             <input
               type="number"
               {...register('sort_order', { valueAsNumber: true })}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2
-                         text-sm text-white focus:outline-none focus:border-brand-accent/60"
+              style={{ ...inputStyle, maxWidth: '120px' }}
             />
-          </div>
+          </Field>
 
-          <div>
-            <label className="block text-xs text-gray-400 mb-1.5">Banner Image</label>
+          <Field label="Banner Image">
             <ImageUploader
               value={banner}
               onChange={(path) => setValue('banner', path)}
               folder="categories"
             />
-          </div>
+          </Field>
 
-          <div className="flex gap-3 pt-2 justify-end">
-            <button type="button" onClick={onClose}
-              className="px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors">
-              Cancel
-            </button>
-            <button type="submit" disabled={saving}
-              className="px-5 py-2 text-sm bg-brand-accent text-gray-950 font-semibold
-                         rounded-lg hover:bg-brand-accent/90 transition-colors disabled:opacity-50">
+          {/* Actions */}
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', paddingTop: '8px' }}>
+            <button type="button" onClick={onClose} style={cancelBtnStyle}>Cancel</button>
+            <button type="submit" disabled={saving} style={saveBtnStyle}>
               {saving ? 'Saving...' : 'Save'}
             </button>
           </div>
         </form>
       </div>
+    </>
+  )
+}
+
+function Field({ label, children }) {
+  return (
+    <div>
+      <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', marginBottom: '6px' }}>
+        {label}
+      </label>
+      {children}
     </div>
   )
+}
+
+const inputStyle = {
+  width: '100%', backgroundColor: '#1f2937',
+  border: '1px solid #374151', borderRadius: '8px',
+  padding: '10px 12px', fontSize: '14px', color: '#f9fafb',
+  outline: 'none', boxSizing: 'border-box',
+  fontFamily: 'system-ui, sans-serif',
+}
+
+const cancelBtnStyle = {
+  padding: '10px 20px', background: 'none',
+  border: '1px solid #374151', borderRadius: '8px',
+  color: '#9ca3af', fontSize: '13px', cursor: 'pointer',
+}
+
+const saveBtnStyle = {
+  padding: '10px 24px',
+  backgroundColor: '#C6FF00', color: '#030712',
+  fontWeight: 700, fontSize: '13px',
+  border: 'none', borderRadius: '8px', cursor: 'pointer',
 }

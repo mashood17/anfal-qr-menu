@@ -1,6 +1,5 @@
 import { useForm, useFieldArray } from 'react-hook-form'
 import ImageUploader from '@/components/ui/ImageUploader'
-import { X, Plus, Trash2 } from 'lucide-react'
 
 const FOOD_TYPES = ['veg', 'non_veg']
 const BADGES     = ['', 'best_seller', 'chef_special', 'popular', 'new']
@@ -25,7 +24,6 @@ export default function ItemForm({ initial, categories, onSave, onClose, saving 
   const image = watch('image')
 
   const onSubmit = (data) => {
-    // Coerce price to number, filter empty
     data.prices = data.prices
       .filter((p) => p.label && p.price)
       .map((p) => ({ ...p, price: parseFloat(p.price) }))
@@ -34,112 +32,107 @@ export default function ItemForm({ initial, categories, onSave, onClose, saving 
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 overflow-y-auto py-6">
-      <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 w-full max-w-lg mx-4 my-auto">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="text-base font-semibold text-white">
+    <>
+      <div
+        onClick={onClose}
+        style={{
+          position: 'fixed', inset: 0,
+          backgroundColor: 'rgba(0,0,0,0.6)',
+          zIndex: 300, backdropFilter: 'blur(2px)',
+        }}
+      />
+
+      <div
+        style={{ position: 'fixed', zIndex: 301, backgroundColor: '#111827', border: '1px solid #1f2937', overflowY: 'auto' }}
+        className="admin-form-panel"
+      >
+        {/* Header */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '16px 20px', borderBottom: '1px solid #1f2937',
+          position: 'sticky', top: 0, backgroundColor: '#111827', zIndex: 1,
+        }}>
+          <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#f9fafb' }}>
             {initial ? 'Edit Item' : 'New Item'}
           </h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-white">
-            <X size={16} />
-          </button>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', fontSize: '20px' }}>×</button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+
           {/* Name */}
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">Name *</label>
-            <input {...register('name', { required: true })}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2
-                         text-sm text-white focus:outline-none focus:border-brand-accent/60"
-              placeholder="e.g. Steam Chicken Mandi" />
+            <label style={labelStyle}>Name *</label>
+            <input {...register('name', { required: true })} placeholder="e.g. Steam Chicken Mandi" style={inputStyle} />
           </div>
 
           {/* Description */}
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">Description</label>
-            <textarea {...register('description')} rows={2}
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2
-                         text-sm text-white focus:outline-none focus:border-brand-accent/60 resize-none"
-              placeholder="Short description..." />
+            <label style={labelStyle}>Description</label>
+            <textarea {...register('description')} rows={2} placeholder="Short description..." style={{ ...inputStyle, resize: 'vertical' }} />
           </div>
 
-          {/* Category + Food type */}
-          <div className="grid grid-cols-2 gap-3">
+          {/* Category + Food Type */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <div>
-              <label className="block text-xs text-gray-400 mb-1.5">Category *</label>
-              <select {...register('category_id', { required: true })}
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2
-                           text-sm text-white focus:outline-none focus:border-brand-accent/60">
-                {categories.map((c) => (
-                  <option key={c.id} value={c.id}>{c.name}</option>
-                ))}
+              <label style={labelStyle}>Category *</label>
+              <select {...register('category_id', { required: true })} style={inputStyle}>
+                {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs text-gray-400 mb-1.5">Food Type</label>
-              <select {...register('food_type')}
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2
-                           text-sm text-white focus:outline-none focus:border-brand-accent/60">
+              <label style={labelStyle}>Food Type</label>
+              <select {...register('food_type')} style={inputStyle}>
                 {FOOD_TYPES.map((t) => (
-                  <option key={t} value={t}>
-                    {t === 'veg' ? 'Vegetarian' : 'Non-Vegetarian'}
-                  </option>
+                  <option key={t} value={t}>{t === 'veg' ? 'Vegetarian' : 'Non-Vegetarian'}</option>
                 ))}
               </select>
             </div>
           </div>
 
           {/* Badge + Sort */}
-          <div className="grid grid-cols-2 gap-3">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <div>
-              <label className="block text-xs text-gray-400 mb-1.5">Badge</label>
-              <select {...register('badge')}
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2
-                           text-sm text-white focus:outline-none focus:border-brand-accent/60">
-                {BADGES.map((b) => (
-                  <option key={b} value={b}>{b ? b.replace('_', ' ') : 'None'}</option>
-                ))}
+              <label style={labelStyle}>Badge</label>
+              <select {...register('badge')} style={inputStyle}>
+                {BADGES.map((b) => <option key={b} value={b}>{b ? b.replace('_', ' ') : 'None'}</option>)}
               </select>
             </div>
             <div>
-              <label className="block text-xs text-gray-400 mb-1.5">Sort Order</label>
-              <input type="number" {...register('sort_order', { valueAsNumber: true })}
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2
-                           text-sm text-white focus:outline-none focus:border-brand-accent/60" />
+              <label style={labelStyle}>Sort Order</label>
+              <input type="number" {...register('sort_order', { valueAsNumber: true })} style={inputStyle} />
             </div>
           </div>
 
           {/* Prices */}
           <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs text-gray-400">Prices *</label>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+              <label style={labelStyle}>Prices *</label>
               <button type="button" onClick={() => append({ label: '', price: '' })}
-                className="flex items-center gap-1 text-xs text-brand-accent hover:text-brand-accent/80">
-                <Plus size={11} /> Add variant
+                style={{ fontSize: '12px', color: '#C6FF00', background: 'none', border: 'none', cursor: 'pointer' }}>
+                + Add variant
               </button>
             </div>
-            <div className="space-y-2">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {fields.map((field, i) => (
-                <div key={field.id} className="flex gap-2">
+                <div key={field.id} style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                   <input
                     {...register(`prices.${i}.label`, { required: true })}
-                    placeholder="Label (e.g. Q, H, F, regular)"
-                    className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-3 py-2
-                               text-sm text-white focus:outline-none focus:border-brand-accent/60"
+                    placeholder="Label (regular / Q / H / F)"
+                    style={{ ...inputStyle, flex: 1 }}
                   />
                   <input
                     type="number"
                     {...register(`prices.${i}.price`, { required: true })}
                     placeholder="₹"
-                    className="w-28 bg-gray-800 border border-gray-700 rounded-lg px-3 py-2
-                               text-sm text-white focus:outline-none focus:border-brand-accent/60"
+                    style={{ ...inputStyle, width: '90px', flex: 'none' }}
                   />
                   {fields.length > 1 && (
                     <button type="button" onClick={() => remove(i)}
-                      className="text-gray-500 hover:text-red-400 transition-colors px-1">
-                      <Trash2 size={13} />
-                    </button>
+                      style={{ background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', fontSize: '18px', padding: '0 4px', flexShrink: 0 }}
+                      onMouseOver={(e) => e.target.style.color = '#f87171'}
+                      onMouseOut={(e) => e.target.style.color = '#6b7280'}
+                    >×</button>
                   )}
                 </div>
               ))}
@@ -148,7 +141,7 @@ export default function ItemForm({ initial, categories, onSave, onClose, saving 
 
           {/* Image */}
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">Image</label>
+            <label style={labelStyle}>Image</label>
             <ImageUploader
               value={image}
               onChange={(path) => setValue('image', path)}
@@ -156,19 +149,24 @@ export default function ItemForm({ initial, categories, onSave, onClose, saving 
             />
           </div>
 
-          <div className="flex gap-3 pt-2 justify-end">
-            <button type="button" onClick={onClose}
-              className="px-4 py-2 text-sm text-gray-400 hover:text-white transition-colors">
-              Cancel
-            </button>
-            <button type="submit" disabled={saving}
-              className="px-5 py-2 text-sm bg-brand-accent text-gray-950 font-semibold
-                         rounded-lg hover:bg-brand-accent/90 transition-colors disabled:opacity-50">
+          {/* Actions */}
+          <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end', paddingTop: '8px' }}>
+            <button type="button" onClick={onClose} style={cancelBtnStyle}>Cancel</button>
+            <button type="submit" disabled={saving} style={{ ...saveBtnStyle, opacity: saving ? 0.6 : 1 }}>
               {saving ? 'Saving...' : 'Save Item'}
             </button>
           </div>
         </form>
       </div>
-    </div>
+    </>
   )
 }
+
+const labelStyle = { display: 'block', fontSize: '12px', color: '#9ca3af', marginBottom: '6px' }
+const inputStyle = {
+  width: '100%', backgroundColor: '#1f2937', border: '1px solid #374151',
+  borderRadius: '8px', padding: '10px 12px', fontSize: '14px', color: '#f9fafb',
+  outline: 'none', boxSizing: 'border-box', fontFamily: 'system-ui, sans-serif',
+}
+const cancelBtnStyle = { padding: '10px 20px', background: 'none', border: '1px solid #374151', borderRadius: '8px', color: '#9ca3af', fontSize: '13px', cursor: 'pointer' }
+const saveBtnStyle = { padding: '10px 24px', backgroundColor: '#C6FF00', color: '#030712', fontWeight: 700, fontSize: '13px', border: 'none', borderRadius: '8px', cursor: 'pointer' }

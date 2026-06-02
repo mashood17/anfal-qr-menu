@@ -1,27 +1,27 @@
-import { useState }           from 'react'
+import { useState }    from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getAdminCategories, createCategory, updateCategory, deleteCategory } from '@/api/menu'
-import PageHeader      from '@/components/ui/PageHeader'
-import ConfirmDialog   from '@/components/ui/ConfirmDialog'
-import CategoryForm    from '@/components/forms/CategoryForm'
-import { Pencil, Trash2, Plus } from 'lucide-react'
-import toast           from 'react-hot-toast'
+import CategoryForm  from '@/components/forms/CategoryForm'
+import ConfirmDialog from '@/components/ui/ConfirmDialog'
+import toast         from 'react-hot-toast'
 
 export default function CategoriesPage() {
-  const qc                       = useQueryClient()
-  const [editing, setEditing]    = useState(null)   // null | 'new' | category obj
-  const [deleting, setDeleting]  = useState(null)
+  const qc                      = useQueryClient()
+  const [editing, setEditing]   = useState(null)
+  const [deleting, setDeleting] = useState(null)
 
   const { data: categories = [], isLoading } = useQuery({
-    queryKey: ['admin-cats'],
-    queryFn:  getAdminCategories,
+    queryKey: ['admin-cats'], queryFn: getAdminCategories,
   })
 
   const invalidate = () => qc.invalidateQueries({ queryKey: ['admin-cats'] })
 
-  const createMut = useMutation({ mutationFn: createCategory, onSuccess: () => { toast.success('Category created'); invalidate(); setEditing(null) } })
-  const updateMut = useMutation({ mutationFn: ({ id, data }) => updateCategory(id, data), onSuccess: () => { toast.success('Category updated'); invalidate(); setEditing(null) } })
-  const deleteMut = useMutation({ mutationFn: deleteCategory, onSuccess: () => { toast.success('Category deleted'); invalidate(); setDeleting(null) } })
+  const createMut = useMutation({ mutationFn: createCategory,
+    onSuccess: () => { toast.success('Category created'); invalidate(); setEditing(null) }})
+  const updateMut = useMutation({ mutationFn: ({ id, data }) => updateCategory(id, data),
+    onSuccess: () => { toast.success('Category updated'); invalidate(); setEditing(null) }})
+  const deleteMut = useMutation({ mutationFn: deleteCategory,
+    onSuccess: () => { toast.success('Category deleted'); invalidate(); setDeleting(null) }})
 
   const handleSave = (data) => {
     if (editing === 'new') createMut.mutate(data)
@@ -30,59 +30,82 @@ export default function CategoriesPage() {
 
   return (
     <div>
-      <PageHeader
-        title="Categories"
-        description="Manage your menu sections"
-        action={
-          <button
-            onClick={() => setEditing('new')}
-            className="flex items-center gap-2 px-4 py-2 bg-brand-accent text-gray-950 
-                       text-sm font-semibold rounded-lg hover:bg-brand-accent/90 transition-colors"
-          >
-            <Plus size={15} /> Add Category
-          </button>
-        }
-      />
+      {/* Header */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
+        <div>
+          <h1 style={{ fontSize: '20px', fontWeight: 700, color: '#f9fafb' }}>Categories</h1>
+          <p style={{ fontSize: '13px', color: '#6b7280', marginTop: '2px' }}>Manage your menu sections</p>
+        </div>
+        <button
+          onClick={() => setEditing('new')}
+          style={{
+            display: 'flex', alignItems: 'center', gap: '6px',
+            padding: '10px 16px',
+            backgroundColor: '#C6FF00', color: '#030712',
+            fontWeight: 700, fontSize: '13px',
+            border: 'none', borderRadius: '8px', cursor: 'pointer',
+          }}
+        >
+          + Add Category
+        </button>
+      </div>
 
       {isLoading ? (
-        <div className="text-sm text-gray-500">Loading...</div>
+        <p style={{ fontSize: '13px', color: '#6b7280' }}>Loading...</p>
       ) : (
-        <div className="space-y-2">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {categories.map((cat) => (
             <div
               key={cat.id}
-              className="flex items-center justify-between px-4 py-3 
-                         bg-gray-900 border border-gray-800 rounded-xl"
+              style={{
+                display: 'flex', alignItems: 'center',
+                justifyContent: 'space-between', gap: '12px',
+                padding: '14px 16px',
+                backgroundColor: '#111827',
+                border: '1px solid #1f2937',
+                borderRadius: '12px',
+              }}
             >
-              <div className="flex items-center gap-3">
+              {/* Left */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', minWidth: 0, flex: 1 }}>
                 {cat.banner && (
                   <img
                     src={`${import.meta.env.VITE_SUPABASE_STORAGE_URL}/${cat.banner}`}
                     alt=""
-                    className="w-10 h-10 rounded-lg object-cover"
+                    style={{ width: '40px', height: '40px', borderRadius: '8px', objectFit: 'cover', flexShrink: 0 }}
                   />
                 )}
-                <div>
-                  <p className="text-sm font-medium text-white">{cat.name}</p>
+                <div style={{ minWidth: 0 }}>
+                  <p style={{ fontSize: '14px', fontWeight: 600, color: '#f9fafb', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {cat.name}
+                  </p>
                   {cat.description && (
-                    <p className="text-xs text-gray-500">{cat.description}</p>
+                    <p style={{ fontSize: '12px', color: '#6b7280', marginTop: '2px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {cat.description}
+                    </p>
                   )}
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+
+              {/* Actions */}
+              <div style={{ display: 'flex', gap: '4px', flexShrink: 0 }}>
                 <button
                   onClick={() => setEditing(cat)}
-                  className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 
-                             rounded-lg transition-colors"
+                  style={{ padding: '8px', background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', borderRadius: '6px', fontSize: '16px' }}
+                  onMouseOver={(e) => { e.currentTarget.style.backgroundColor = '#1f2937'; e.currentTarget.style.color = '#f9fafb' }}
+                  onMouseOut={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#6b7280' }}
+                  aria-label="Edit"
                 >
-                  <Pencil size={14} />
+                  ✎
                 </button>
                 <button
                   onClick={() => setDeleting(cat)}
-                  className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-800 
-                             rounded-lg transition-colors"
+                  style={{ padding: '8px', background: 'none', border: 'none', color: '#6b7280', cursor: 'pointer', borderRadius: '6px', fontSize: '14px' }}
+                  onMouseOver={(e) => { e.currentTarget.style.backgroundColor = '#1f2937'; e.currentTarget.style.color = '#f87171' }}
+                  onMouseOut={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#6b7280' }}
+                  aria-label="Delete"
                 >
-                  <Trash2 size={14} />
+                  🗑
                 </button>
               </div>
             </div>
@@ -90,7 +113,6 @@ export default function CategoriesPage() {
         </div>
       )}
 
-      {/* Form drawer */}
       {editing && (
         <CategoryForm
           initial={editing === 'new' ? null : editing}
@@ -100,7 +122,6 @@ export default function CategoriesPage() {
         />
       )}
 
-      {/* Delete confirm */}
       {deleting && (
         <ConfirmDialog
           message={`Delete "${deleting.name}"? All items inside will also be deleted.`}
