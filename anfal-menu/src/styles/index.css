@@ -177,3 +177,12 @@
     margin-bottom: 32px !important;
   }
 }
+
+/* Logo visibility — mobile vs desktop */
+.logo-mobile  { display: flex !important; }
+.logo-desktop { display: none  !important; }
+
+@media (min-width: 640px) {
+  .logo-mobile  { display: none  !important; }
+  .logo-desktop { display: flex  !important; }
+}
