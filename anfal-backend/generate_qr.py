@@ -4,7 +4,7 @@ from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers import RoundedModuleDrawer
 from qrcode.image.styles.colormasks import SolidFillColorMask
 
-URL = "https://anfal-menu.vercel.app"
+URL = "https://anfal-qr-menu.vercel.app/"
 
 qr = qrcode.QRCode(
     version=1,
