@@ -12,7 +12,7 @@ export default function MenuHeader({ restaurant }) {
     if (heroImages.length <= 1) return
     const timer = setInterval(() => {
       setCurrentIdx((i) => (i + 1) % heroImages.length)
-    }, 5000)
+    }, 4000)
     return () => clearInterval(timer)
   }, [heroImages.length])
 
