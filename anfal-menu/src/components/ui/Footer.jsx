@@ -89,16 +89,6 @@ export default function Footer({ restaurant }) {
               </a>
             )}
           </div>
-
-          <p
-            style={{
-              fontSize: '11px',
-              color: 'rgba(107,143,110,0.5)',
-              marginTop: '8px',
-            }}
-          >
-            Digital menu by YourCompany
-          </p>
         </div>
       </div>
     </footer>
