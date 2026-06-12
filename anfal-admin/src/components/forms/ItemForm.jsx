@@ -27,7 +27,7 @@ export default function ItemForm({ initial, categories, onSave, onClose, saving 
     .filter((p) => p.label)
     .map((p) => ({
       ...p,
-      price: p.label === '-'
+      price: p.price === '-'
         ? null
         : parseFloat(p.price)
     }))

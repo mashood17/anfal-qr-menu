@@ -2,11 +2,12 @@ import { useRef }            from 'react'
 import { motion, useInView } from 'framer-motion'
 import MenuItemRow           from './MenuItemRow'
 import { categoryImageUrl }  from '@/utils/imageUrl'
+import { PRICE_COL_W } from './MenuItemRow'
 
 // ─────────────────────────────────────────────
 // Layout constants — change these in one place
 // ─────────────────────────────────────────────
-const IMAGE_WIDTH    = '300px'   // fixed column width
+const IMAGE_WIDTH    = '520px'   // fixed column width
 const IMAGE_RATIO    = '4 / 3'  // consistent across all categories
 const GRID_GAP       = '48px'
 const SECTION_PB     = '52px'
@@ -166,22 +167,26 @@ function VariantHeader({ items }) {
   if (!multiItem) return null
 
   return (
+  <div
+    style={{
+      display: 'flex',
+      justifyContent: 'flex-end',
+      marginBottom: '12px',
+      paddingBottom: '10px',
+      borderBottom: '1px solid rgba(198,255,0,0.08)',
+    }}
+  >
     <div
+      className="price-grid"
       style={{
-        display: 'flex',
-        justifyContent: 'flex-end',
-        gap: '18px',
-        marginBottom: '12px',
-        paddingBottom: '10px',
-        borderBottom: '1px solid rgba(198,255,0,0.08)',
+        '--price-cols': multiItem.prices.length,
       }}
     >
       {multiItem.prices.map((p) => (
         <span
           key={p.label}
+          className="price-cell"
           style={{
-            minWidth: '32px',
-            textAlign: 'center',
             fontSize: '11px',
             fontWeight: 600,
             color: 'var(--text-faint)',
@@ -193,7 +198,8 @@ function VariantHeader({ items }) {
         </span>
       ))}
     </div>
-  )
+  </div>
+)
 }
 
 // ─────────────────────────────────────────────
