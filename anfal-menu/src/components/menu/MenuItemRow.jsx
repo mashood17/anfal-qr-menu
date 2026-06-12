@@ -19,7 +19,7 @@ import useMenuStore from '@/store/menuStore'
   so the columns line up perfectly at every breakpoint.
 */
 
-const PRICE_COL_W         = 52   // px — mobile / base width, wide enough for "₹1,550"
+const PRICE_COL_W         = 62   // px — mobile / base width, wide enough for "₹1,550"
 const DESKTOP_PRICE_COL_W = 72   // px — desktop width, more breathing room
 const COL_GAP             = 0    // mobile: columns are flush
 const DESKTOP_COL_GAP     = 12   // desktop: visible gap between Q/H/F values
