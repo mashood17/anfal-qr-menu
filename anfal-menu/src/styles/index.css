@@ -13,6 +13,10 @@
     --text-muted:    #A8B8A0;
     --text-faint:    #6B8F6E;
     --border:        rgba(198,255,0,0.08);
+
+    /* Price column sizing — mobile/base values */
+    --price-col-w: 52px;
+    --price-col-gap: 0px;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -113,6 +117,41 @@
     flex-shrink: 0;
   }
 
+  /* Single-price column — same width as a multi-price column */
+  .price-col-single {
+    min-width: var(--price-col-w);
+  }
+
+  /*
+    Multi-price grid — N equal fixed columns.
+    Width and gap driven by CSS variables so the lg: breakpoint
+    below can change them WITHOUT any JS / isDesktop logic, and
+    so the Q/H/F header row (which reuses this same class) stays
+    perfectly in sync.
+  */
+  .price-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--price-cols), var(--price-col-w));
+    column-gap: var(--price-col-gap);
+  }
+
+  .price-cell {
+    font-size: clamp(11px, 2.8vw, 14px);
+    font-weight: 600;
+    color: var(--brand-accent);
+    text-align: right;
+    padding-right: 2px;
+  }
+
+  /* Q/H/F header label cells reuse .price-cell sizing/alignment */
+  .price-cell-label {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
   .price-variants {
     display: flex;
     gap: 20px;
@@ -145,6 +184,24 @@
   }
   .scrollbar-hide::-webkit-scrollbar { display: none; }
 }
+
+/*
+  ── Desktop-only premium price spacing ─────────────────────────────────
+  Widens each Q/H/F column from 52px → 72px and introduces a 12px gap
+  between columns, ONLY at 1024px+. Mobile keeps --price-col-w: 52px
+  and --price-col-gap: 0px from :root above — completely untouched.
+
+  Because .price-grid / .price-cell / .price-col-single are shared by
+  both the item rows AND the Q/H/F header row, this single override
+  keeps everything perfectly aligned across breakpoints.
+*/
+@media (min-width: 1024px) {
+  :root {
+    --price-col-w: 72px;
+    --price-col-gap: 12px;
+  }
+}
+
 /* Desktop: two-column layout only when banner exists */
 @media (max-width: 1023px) {
   .category-image-desktop {
