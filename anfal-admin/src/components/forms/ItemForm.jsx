@@ -23,12 +23,20 @@ export default function ItemForm({ initial, categories, onSave, onClose, saving 
   const image = watch('image')
 
   const onSubmit = (data) => {
-    data.prices = data.prices
-      .filter((p) => p.label && p.price)
-      .map((p) => ({ ...p, price: parseFloat(p.price) }))
-    if (!data.badge) data.badge = null
-    onSave(data)
-  }
+  data.prices = data.prices
+    .filter((p) => p.label)
+    .map((p) => ({
+      ...p,
+      price: p.label === '-'
+        ? null
+        : parseFloat(p.price)
+    }))
+
+  console.log('SUBMIT DATA:', data)
+
+  if (!data.badge) data.badge = null
+  onSave(data)
+}
 
   return (
     <>
@@ -118,9 +126,14 @@ export default function ItemForm({ initial, categories, onSave, onClose, saving 
                     style={{ ...inputStyle, flex: 1 }}
                   />
                   <input
-                    type="number"
-                    {...register(`prices.${i}.price`, { required: true })}
-                    placeholder="₹"
+                  type="text"
+                  {...register(`prices.${i}.price`)}
+                  disabled={watch(`prices.${i}.label`) === '-'}
+                    placeholder={
+                      watch(`prices.${i}.label`) === '-'
+                        ? 'No Price'
+                        : '₹'
+                    }
                     style={{ ...inputStyle, width: '90px', flex: 'none' }}
                   />
                   {fields.length > 1 && (

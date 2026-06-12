@@ -13,5 +13,5 @@ class ItemPrice(db.Model):
     def to_dict(self):
         return {
             'label': self.label,
-            'price': float(self.price),
+            'price': float(self.price) if self.price is not None else None,
         }

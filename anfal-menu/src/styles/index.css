@@ -177,3 +177,13 @@
     margin-bottom: 32px !important;
   }
 }
+/* Category grid — desktop two-column / mobile single-column */
+.category-image-desktop { display: block; }
+
+@media (max-width: 767px) {
+  .category-image-desktop { display: none; }
+
+  .category-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
