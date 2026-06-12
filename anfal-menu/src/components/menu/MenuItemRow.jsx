@@ -30,7 +30,9 @@ export default function MenuItemRow({ item }) {
       {/* Right: price */}
       {isSingle && (
         <span className="item-price">
-          ₹{Number(item.prices[0].price).toLocaleString('en-IN')}
+          {item.prices[0].price == null
+            ? '-'
+            : `₹${Number(item.prices[0].price).toLocaleString('en-IN')}`}
         </span>
       )}
 
@@ -62,7 +64,9 @@ export default function MenuItemRow({ item }) {
                     minWidth: '38px',
                   }}
                 >
-                  ₹{Number(p.price).toLocaleString('en-IN')}
+                  {p.price == null
+                    ? '-'
+                    : `₹${Number(p.price).toLocaleString('en-IN')}`}
                 </span>
               ))}
             </div>
